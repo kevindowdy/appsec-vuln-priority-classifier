@@ -30,13 +30,20 @@ def main():
 
     # Load c/h/m vulnerabilities
     chm_vulnerabilities = pd.read_excel(f'{base_path}/FIG Open Vulnerabilities_20260515.xlsx', sheet_name='FIG Open Vulnerabilities', dtype=str)
+    chm_vulnerabilities = chm_vulnerabilities.dropna(how='all')
 
+    print("there are " + str(len(chm_vulnerabilities)) + " chm vulnerabilities")
     print("loading open low vulnerability data...")
 
     # Load low vulnerabilities
     low_vulnerabilities = pd.read_excel(f'{base_path}/FIG Open Vulnerabilities_Low_2026052026.xlsx', sheet_name='FIG Open Vulnerabilities', dtype=str)
+    low_vulnerabilities = low_vulnerabilities.dropna(how='all')
+
+    print("there are " + str(len(low_vulnerabilities)) + " low vulnerabilities")
 
     total_open_vulnerabilities = pd.concat([chm_vulnerabilities, low_vulnerabilities], ignore_index=True)
+
+    print("there are " + str(len(total_open_vulnerabilities)) + " vulnerabilities in total")
 
     print("loading app inventory")
 
