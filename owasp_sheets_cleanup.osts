@@ -1,0 +1,52 @@
+function main(workbook: ExcelScript.Workbook) {
+  const sheetNames = [
+    "#1e - Owasp Top 10 no WAF",
+    "#7a - Owasp Top 10 - Tier 1",
+    "#7b - Owasp Top 10 - Tier 2"
+  ];
+
+  for (const name of sheetNames) {
+    const sheet = workbook.getWorksheet(name);
+    if (!sheet) {
+      console.log(`Sheet not found: ${name}`);
+      continue;
+    }
+
+    // 1. Clear all filters
+    const autoFilter = sheet.getAutoFilter();
+    if (autoFilter) {
+      autoFilter.clearCriteria();
+      autoFilter.remove();
+    }
+
+    // 2. Unhide all columns
+    const usedRange = sheet.getUsedRange(true);
+    if (usedRange) {
+      const colCount = usedRange.getColumnCount();
+      const firstCol = usedRange.getColumnIndex();
+      for (let c = firstCol; c < firstCol + colCount; c++) {
+        sheet.getRange(`${columnIndexToLetter(c)}:${columnIndexToLetter(c)}`).setColumnHidden(false);
+      }
+    }
+
+    // 3. Replace all formulas with their current values
+    if (usedRange) {
+      const values = usedRange.getValues();
+      usedRange.setValues(values);
+    }
+
+    console.log(`Done: ${name}`);
+  }
+}
+
+// Convert a 0-based column index to an Excel column letter (e.g. 0 → "A", 25 → "Z", 26 → "AA")
+function columnIndexToLetter(index: number): string {
+  let letter = "";
+  let n = index + 1;
+  while (n > 0) {
+    const remainder = (n - 1) % 26;
+    letter = String.fromCharCode(65 + remainder) + letter;
+    n = Math.floor((n - 1) / 26);
+  }
+  return letter;
+}
