@@ -86,15 +86,17 @@ def main():
         how='left'
     )
 
-    vulnerabilities_not_in_war_room.to_csv(
-        f'{base_path}/Vulnerabilities-excluding-war-room.csv',
-        index=False
-        )
-    
-    print("finished generating data set")
+    p1_vulnerabilities = vulnerabilities_not_in_war_room[vulnerabilities_not_in_war_room['Priority'] == 'P1']
+    p2_vulnerabilities = vulnerabilities_not_in_war_room[vulnerabilities_not_in_war_room['Priority'] == 'P2']
+
+    p1_vulnerabilities.to_csv(f'{base_path}/Vulnerabilities-P1.csv', index=False)
+    p2_vulnerabilities.to_csv(f'{base_path}/Vulnerabilities-P2.csv', index=False)
+
+    print("finished generating data sets")
 
     print("there are " + str(len(war_room_data)) + " vulnerabilities in P0")
-    print("there are " + str(len(vulnerabilities_not_in_war_room)) + " vulnerabilities in P1 and P2")
+    print("there are " + str(len(p1_vulnerabilities)) + " vulnerabilities in P1")
+    print("there are " + str(len(p2_vulnerabilities)) + " vulnerabilities in P2")
 
     return
 
